@@ -210,10 +210,15 @@
       <Index>EUR-EURIBOR-3M</Index>
       <Index>EUR-EONIA</Index>
       <Index>USD-LIBOR-3M</Index>
+      <Index>USD-LIBOR-6M</Index>
+      <Index>USD-FedFunds</Index>
       <Index>GBP-LIBOR-6M</Index>
       <Index>GBP-LIBOR-3M</Index>
+      <Index>GBP-SONIA</Index>
       <Index>CHF-LIBOR-6M</Index>
+      <Index>CHF-TOIS</Index>
       <Index>JPY-LIBOR-6M</Index>
+      <Index>JPY-TONAR</Index>
     </Indices>
     <SwapIndices>
       <SwapIndex>
@@ -226,7 +231,9 @@
       </SwapIndex>
     </SwapIndices>
     <DefaultCurves>
-      <Names/>
+      <Names>
+	<Name>CPTY_C</Name>
+      </Names>
       <Tenors>6M,1Y,2Y</Tenors>
     </DefaultCurves>
     <!-- Even if we do not simulate them - option pricing needs vol
@@ -246,6 +253,18 @@
       <Expiries>6M,1Y,2Y,3Y,5Y,10Y,12Y,15Y,20Y</Expiries>
       <Terms>1Y,2Y,3Y,4Y,5Y,7Y,10Y,15Y,20Y,30Y</Terms>
     </SwaptionVolatilities>
+    
+    <CapFloorVolatilities>
+      <Simulate>false</Simulate>
+      <ReactionToTimeDecay>ConstantVariance</ReactionToTimeDecay>
+      <Currencies>
+        <Currency>EUR</Currency>
+        <Currency>USD</Currency>
+      </Currencies>
+      <Expiries>6M,1Y,2Y,3Y,5Y,7Y,10Y,15Y,20Y</Expiries>
+      <Strikes>0.00,0.01,0.02,0.03,0.04,0.05,0.06</Strikes>
+    </CapFloorVolatilities>
+
     <FxVolatilities>
       <Simulate>false</Simulate>
       <!-- Alternative: ConstantVariance -->
@@ -257,6 +276,21 @@
       </CurrencyPairs>
       <Expiries>6M,1Y,2Y,3Y,4Y,5Y,7Y,10Y</Expiries>
     </FxVolatilities>
+
+    <BenchmarkCurves>
+      <BenchmarkCurve>
+	<Currency>EUR</Currency>
+	<Name>BENCHMARK_EUR</Name>
+      </BenchmarkCurve>
+    </BenchmarkCurves>
+
+    <Securities>
+      <Simulate>false</Simulate>
+      <Names>
+        <Name>SECURITY_1</Name>
+      </Names>
+    </Securities>
+    
     <!-- Additional data that is recorded during simulation for later
 	   use in the post processor -->
     <AggregationScenarioDataCurrencies>
