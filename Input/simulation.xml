@@ -312,6 +312,7 @@
       <Index>JPY-LIBOR-6M</Index>
       <Index>USD-FedFunds</Index>
       <Index>GBP-SONIA</Index>
+      <Index>USD-Prime</Index>
     </Indices>
     <SwapIndices>
       <SwapIndex>
