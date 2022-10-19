@@ -33,6 +33,12 @@
       <Currency>CHF</Currency>
       <Currency>JPY</Currency>
     </Currencies>
+
+    <InflationIndices>
+      <InflationIndex>EUHICPXT</InflationIndex>
+      <InflationIndex>UKRPI</InflationIndex>
+    </InflationIndices>
+
     <Equities>
       <Equity>SP5</Equity>
       <Equity>Lufthansa</Equity>
@@ -200,7 +206,64 @@
           <Strikes/>
         </CalibrationOptions>
       </CrossAssetLGM>
-    </EquityModels>    
+    </EquityModels> 
+
+    <InflationIndexModels>
+	  <LGM index="EUHICPXT">
+		<Currency>EUR</Currency>
+        <CalibrationType>Bootstrap</CalibrationType>
+        <Volatility>
+          <Calibrate>Y</Calibrate>
+          <VolatilityType>Hagan</VolatilityType>
+          <ParamType>Piecewise</ParamType>
+          <TimeGrid>    1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 10.0</TimeGrid>
+          <InitialValue>0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01</InitialValue>
+        </Volatility>
+        <Reversion>
+          <Calibrate>Y</Calibrate>
+          <ReversionType>Hagan</ReversionType>
+          <ParamType>Piecewise</ParamType>
+          <TimeGrid>    1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 10.0</TimeGrid>
+          <InitialValue>1, 1, 1, 1, 1, 1, 1, 1</InitialValue>
+        </Reversion>
+        <CalibrationCapFloors>
+		  <CapFloor>Floor</CapFloor>
+          <Expiries> 1Y, 2Y, 4Y, 6Y, 8Y, 10Y</Expiries>
+          <Strikes>0.015, 0.015, 0.015, 0.015, 0.015, 0.015</Strikes>
+        </CalibrationCapFloors>
+        <ParameterTransformation>
+          <ShiftHorizon>0.0</ShiftHorizon>
+          <Scaling>1.0</Scaling>
+        </ParameterTransformation>
+      </LGM>
+	  <LGM index="UKRPI">
+		<Currency>GBP</Currency>
+        <CalibrationType>Bootstrap</CalibrationType>
+        <Volatility>
+          <Calibrate>Y</Calibrate>
+          <VolatilityType>Hagan</VolatilityType>
+          <ParamType>Piecewise</ParamType>
+          <TimeGrid>    1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 10.0</TimeGrid>
+          <InitialValue>0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01</InitialValue>
+        </Volatility>
+        <Reversion>
+          <Calibrate>Y</Calibrate>
+          <ReversionType>Hagan</ReversionType>
+          <ParamType>Piecewise</ParamType>
+          <TimeGrid>    1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 10.0</TimeGrid>
+          <InitialValue>0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6</InitialValue>
+        </Reversion>
+        <CalibrationCapFloors>
+		  <CapFloor>Floor</CapFloor>
+          <Expiries> 2Y, 4Y, 6Y, 8Y, 10Y</Expiries>
+          <Strikes>0.03, 0.03, 0.03, 0.03, 0.03</Strikes>
+        </CalibrationCapFloors>
+        <ParameterTransformation>
+          <ShiftHorizon>0.0</ShiftHorizon>
+          <Scaling>1.0</Scaling>
+        </ParameterTransformation>
+	  </LGM>
+	</InflationIndexModels>   
     <InstantaneousCorrelations>
       <Correlation factor1="IR:EUR" factor2="IR:USD">0.3</Correlation>
       <Correlation factor1="IR:EUR" factor2="IR:GBP">0.3</Correlation>
@@ -213,7 +276,9 @@
       <Correlation factor1="IR:USD" factor2="FX:GBPEUR">0</Correlation>
       <Correlation factor1="FX:USDEUR" factor2="FX:GBPEUR">0</Correlation>
       <Correlation factor1="EQ:SP5" factor2="EQ:Lufthansa">0</Correlation>
-      <!-- ... -->
+      <Correlation factor1="INF:UKRPI" factor2="INF:EUHICPXT">0</Correlation>
+	  <Correlation factor1="INF:UKRPI" factor2="IR:GBP">0</Correlation>
+	  <Correlation factor1="INF:EUHICPXT" factor2="IR:EUR">0</Correlation>
     </InstantaneousCorrelations>
   </CrossAssetModel>
   <!--
@@ -321,6 +386,36 @@
       </CurrencyPairs>
       <Expiries>6M,1Y,2Y,3Y,4Y,5Y,7Y,10Y</Expiries>
     </FxVolatilities>
+
+    <CpiIndices>
+      <Index>EUHICPXT</Index>
+      <Index>UKRPI</Index>
+    </CpiIndices>
+	
+	<ZeroInflationIndexCurves>
+      <Names>
+      	<Name>EUHICPXT</Name>
+        <Name>UKRPI</Name>
+      </Names>
+      <Tenors>3M,6M,1Y,2Y,3Y,4Y,5Y,7Y,10Y,12Y,15Y,20Y</Tenors>
+    </ZeroInflationIndexCurves>
+	
+	<YYInflationIndexCurves>
+      <Names>
+      	<Name>EUHICPXT</Name>
+      </Names>
+      <Tenors>3M,6M,1Y,2Y,3Y,4Y,5Y,7Y,10Y,12Y,15Y,20Y</Tenors>
+    </YYInflationIndexCurves>
+
+    <YYCapFloorVolatilities>
+      <Simulate>false</Simulate>
+      <ReactionToTimeDecay>ConstantVariance</ReactionToTimeDecay>
+      <Names>
+        <Name>EUHICPXT</Name>
+      </Names>
+      <Expiries>6M,1Y,2Y,3Y,5Y,7Y,10Y,15Y,20Y</Expiries>
+      <Strikes>0.00,0.01,0.02,0.03</Strikes>
+    </YYCapFloorVolatilities>
 
     <BenchmarkCurves>
       <BenchmarkCurve>
