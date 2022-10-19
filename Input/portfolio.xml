@@ -19,7 +19,7 @@
         <PaymentConvention>F</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.02</Rate>
+            <Rate>0.022</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
@@ -142,7 +142,7 @@
       </LegData>
     </SwapData>
   </Trade>
-  <Trade id="Swap_20">
+  <Trade id="Swap_20-1">
     <TradeType>Swap</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -155,13 +155,13 @@
         <Payer>false</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>10000000.000000</Notional>
+          <Notional>20000000.000000</Notional>
         </Notionals>
         <DayCounter>30/360</DayCounter>
         <PaymentConvention>F</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.009851</Rate>
+            <Rate>0.0077789</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
@@ -184,7 +184,7 @@
         <Payer>true</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>10000000.000000</Notional>
+          <Notional>20000000.000000</Notional>
         </Notionals>
         <DayCounter>A360</DayCounter>
         <PaymentConvention>MF</PaymentConvention>
@@ -2125,7 +2125,7 @@
         <PaymentConvention>Following</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.02</Rate>
+            <Rate>0.02113</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
@@ -2229,7 +2229,7 @@
       </LegData>
     </SwaptionData>
   </Trade>
-  <Trade id="SwaptionPhysical">
+  <Trade id="SwaptionPhysical_1">
     <TradeType>Swaption</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -2256,7 +2256,7 @@
         <Payer>true</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>10000000</Notional>
+          <Notional>40000000</Notional>
         </Notionals>
         <DayCounter>A360</DayCounter>
         <PaymentConvention>ModifiedFollowing</PaymentConvention>
@@ -2286,13 +2286,13 @@
         <Payer>false</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>10000000</Notional>
+          <Notional>40000000</Notional>
         </Notionals>
         <DayCounter>ACT/ACT</DayCounter>
         <PaymentConvention>Following</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.02</Rate>
+            <Rate>0.05</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
@@ -2312,7 +2312,7 @@
       </LegData>
     </SwaptionData>
   </Trade>
-  <Trade id="Swap_3">
+  <Trade id="Swap_31">
     <TradeType>Swap</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -4222,7 +4222,7 @@
       </LegData>
     </SwapData>
   </Trade>
-  <Trade id="Swap_2">
+  <Trade id="Swap_21_1">
     <TradeType>Swap</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -4255,7 +4255,7 @@
         <Payer>true</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>30000000</Notional>
+          <Notional>120000000</Notional>
         </Notionals>
         <DayCounter>A360</DayCounter>
         <PaymentConvention>ModifiedFollowing</PaymentConvention>
@@ -4285,13 +4285,13 @@
         <Payer>false</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>30000000</Notional>
+          <Notional>120000000</Notional>
         </Notionals>
         <DayCounter>T360</DayCounter>
         <PaymentConvention>ModifiedFollowing</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.01</Rate>
+            <Rate>0.02</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
@@ -7710,7 +7710,7 @@
       <Quantity>775</Quantity>
     </EquityOptionData>
   </Trade>
-  <Trade id="EQ_PUT_SP5">
+  <Trade id="EQ_PUT_SP51">
     <TradeType>EquityOption</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -7730,8 +7730,8 @@
       </OptionData>
       <Name>SP5</Name>
       <Currency>USD</Currency>
-      <Strike>2147.56</Strike>
-      <Quantity>775</Quantity>
+      <Strike>2447.56</Strike>
+      <Quantity>599</Quantity>
     </EquityOptionData>
   </Trade>
   <Trade id="Swaption_CALL">
@@ -9287,7 +9287,7 @@
     </CreditDefaultSwapData>
   </Trade>
 
-  <Trade id="Swap_20y">
+  <Trade id="Swap_20y1">
     <TradeType>Swap</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -9300,13 +9300,13 @@
         <Payer>false</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>10000000.000000</Notional>
+          <Notional>50000000.000000</Notional>
         </Notionals>
         <DayCounter>30/360</DayCounter>
         <PaymentConvention>F</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.02</Rate>
+            <Rate>0.025</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
@@ -9329,7 +9329,7 @@
         <Payer>true</Payer>
         <Currency>EUR</Currency>
         <Notionals>
-          <Notional>10000000.000000</Notional>
+          <Notional>50000000.000000</Notional>
         </Notionals>
         <DayCounter>A360</DayCounter>
         <PaymentConvention>MF</PaymentConvention>
@@ -9602,7 +9602,7 @@
       </LegData>
     </SwaptionData>
   </Trade>
-  <Trade id="Swaption_4_16">
+  <Trade id="Swaption_4_16_1">
     <TradeType>Swaption</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -11042,7 +11042,7 @@
     </SwapData>
   </Trade>
 
-  <Trade id="Swap_20y">
+  <Trade id="Swap_20y2">
     <TradeType>Swap</TradeType>
     <Envelope>
       <CounterParty>CPTY_A</CounterParty>
@@ -11061,7 +11061,7 @@
         <PaymentConvention>F</PaymentConvention>
         <FixedLegData>
           <Rates>
-            <Rate>0.02</Rate>
+            <Rate>0.023</Rate>
           </Rates>
         </FixedLegData>
         <ScheduleData>
