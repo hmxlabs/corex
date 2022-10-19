@@ -43,7 +43,7 @@
       <Parameter name="outputFileName">curves.csv</Parameter>
     </Analytic>
     <Analytic type="simulation">
-      <Parameter name="active">N</Parameter>
+      <Parameter name="active">Y</Parameter>
       <Parameter name="simulationConfigFile">simulation.xml</Parameter>
       <Parameter name="pricingEnginesFile">./pricingengine.xml</Parameter>
       <Parameter name="baseCurrency">EUR</Parameter>
