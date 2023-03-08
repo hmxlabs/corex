@@ -2,12 +2,12 @@
 <Simulation>
   <Parameters>
     <Discretization>Exact</Discretization>
-    <Grid>242,1M</Grid>
+    <Grid>83,3M</Grid>
     <Calendar>EUR,USD,GBP,CHF</Calendar>
     <Sequence>SobolBrownianBridge</Sequence>
     <Scenario>Simple</Scenario>
     <Seed>42</Seed>
-    <Samples>1000</Samples>
+    <Samples>500</Samples>
     <Ordering>Steps</Ordering>
     <DirectionIntegers>JoeKuoD7</DirectionIntegers>
   </Parameters>

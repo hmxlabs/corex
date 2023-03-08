@@ -1,2 +1,7 @@
 bin
 output
+venv
+temp
+input.enc
+input.tar.gz
+.vscode
