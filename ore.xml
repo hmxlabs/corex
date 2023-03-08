@@ -1,23 +1,22 @@
-<?xml version="1.0"?>
 <ORE>
   <Setup>
     <Parameter name="asofDate">2016-02-05</Parameter>
-    <Parameter name="inputPath">Input</Parameter>
-    <Parameter name="outputPath">Output</Parameter>
+    <Parameter name="inputPath">input</Parameter>
+    <Parameter name="outputPath">output</Parameter>
     <Parameter name="logFile">log.txt</Parameter>
     <Parameter name="logMask">7</Parameter>
-    <Parameter name="marketDataFile">./market_20160205.txt</Parameter>
-    <Parameter name="fixingDataFile">./fixings_20160205.txt</Parameter>
+    <Parameter name="marketDataFile">market_20160205.txt</Parameter>
+    <Parameter name="fixingDataFile">fixings_20160205.txt</Parameter>
     <Parameter name="implyTodaysFixings">Y</Parameter>
-    <Parameter name="curveConfigFile">./curveconfig.xml</Parameter>
-    <Parameter name="conventionsFile">./conventions.xml</Parameter>
-    <Parameter name="marketConfigFile">./todaysmarket.xml</Parameter>
-    <Parameter name="pricingEnginesFile">./pricingengine.xml</Parameter>
+    <Parameter name="curveConfigFile">curveconfig.xml</Parameter>
+    <Parameter name="conventionsFile">conventions.xml</Parameter>
+    <Parameter name="marketConfigFile">todaysmarket.xml</Parameter>
+    <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
     <Parameter name="portfolioFile">portfolio.xml</Parameter>
     <Parameter name="observationModel">None</Parameter>
     <Parameter name="continueOnError">false</Parameter>
-    <Parameter name="calendarAdjustment">./calendaradjustment.xml</Parameter>
-    <Parameter name="currencyConfiguration">./currencies.xml</Parameter>
+    <Parameter name="calendarAdjustment">calendaradjustment.xml</Parameter>
+    <Parameter name="currencyConfiguration">currencies.xml</Parameter>
   </Setup>
   <Markets>
     <Parameter name="lgmcalibration">libor</Parameter>
@@ -46,9 +45,9 @@
     <Analytic type="simulation">
       <Parameter name="active">Y</Parameter>
       <Parameter name="simulationConfigFile">simulation.xml</Parameter>
-      <Parameter name="pricingEnginesFile">./pricingengine.xml</Parameter>
+      <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
       <Parameter name="baseCurrency">EUR</Parameter>
-      <!-- Parameter name="scenariodump">scenariodump.csv</Parameter> -->
+      
       <Parameter name="cubeFile">cube.dat</Parameter>
       <Parameter name="aggregationScenarioDataFileName">scenariodata.dat</Parameter>
     </Analytic>
@@ -79,13 +78,13 @@
     </Analytic>
     <Analytic type="initialMargin">
       <Parameter name="active">N</Parameter>
-      <Parameter name="method"/>
+      <Parameter name="method" />
     </Analytic>
     <Analytic type="sensitivity">
       <Parameter name="active">N</Parameter>
       <Parameter name="marketConfigFile">simulation.xml</Parameter>
       <Parameter name="sensitivityConfigFile">sensitivity.xml</Parameter>
-      <Parameter name="pricingEnginesFile">./pricingengine.xml</Parameter>
+      <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
       <Parameter name="scenarioOutputFile">scenario.csv</Parameter>
       <Parameter name="sensitivityOutputFile">sensitivity.csv</Parameter>
       <Parameter name="outputSensitivityThreshold">0.000001</Parameter>
