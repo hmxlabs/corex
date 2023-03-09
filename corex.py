@@ -5,7 +5,7 @@ import argparse
 import subprocess
 import os
 import sys
-from typing import List
+import statistics
 from pathlib import Path
 
 LOG_FILE = "corex.log"
@@ -30,13 +30,13 @@ def create_corex_unit_dirs(count: int) -> None:
     logging.info("Completed creating working directories")
 
 
-def start_corex_unit(count: int, ore_dir: str) -> list[subprocess.Popen]:
+def start_corex_unit(count: int, ore_dir: str, sim_count: int) -> list[subprocess.Popen]:
     logging.info("Starting corex-unit")
     procs=[]
     for index in range(0,count):
         logging.info(f"Starting process: {index}")
         cwd = os.path.join(".", str(index))
-        corex_unit_command = f"python3 ../corex-unit.py --input ../input.enc --ore-dir {ore_dir}"
+        corex_unit_command = f"python3 ../corex-unit.py --input ../input.enc --ore-dir {ore_dir} --sim-count {sim_count}"
         procs.append(subprocess.Popen([corex_unit_command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd))
 
     logging.info("All corex-unit processes launched")
@@ -55,19 +55,44 @@ def wait_for_corex(procs: list[subprocess.Popen]) -> bool:
     logging.info("All corex-unit processes complete")
     return success
 
-def create_results(count: int, start_time, end_time, wall_time) -> None:
+def create_results(count: int, sim_count: int, start_time: float, end_time: float, wall_time: float) -> None:
     logging.info("Creating results")
     unit_results: list[dict[str,str]] = []
+    unit_scores: list[float] = []
+    unit_wall_times: list[float] = []
+    unit_calc_times: list[float] = []
+    unit_feed_times: list[float] = [] 
+
     for index in range(0,count):
         result_filename = os.path.join(".", str(index), RESULTS_FILE)
         with open(result_filename) as results_file:
             results = json.load(results_file)
+            unit_scores.append(results["score"])
+            unit_wall_times.append(results["elapsed_time"])
+            unit_calc_times.append(results["calc_time"])
+            unit_feed_times.append(results["feed_time"])
             unit_results.append(results)
     
+    corex_score = sum(unit_scores)
+    total_core_time = sum(unit_wall_times)
+    mean_core_time =  total_core_time / count
+    max_core_time = max(unit_wall_times)
+    min_core_time = min(unit_wall_times)
+    var_core_time = max_core_time - min_core_time
+    stddev_core_time = 0
+    if count > 1:
+        stddev_core_time = statistics.stdev(unit_wall_times)
+
     results = {
+                "score": corex_score,
                 "start_time": start_time,
                 "end_time": end_time,
-                "wall_time": wall_time,
+                "elapsed_time": wall_time,
+                "mean_core_time": mean_core_time,
+                "max_core_time": max_core_time,
+                "min_core_time": min_core_time,
+                "diff_core_time": var_core_time,
+                "stdev_core_time": stddev_core_time,
                 "unit_times": unit_results
               }
     
@@ -76,12 +101,14 @@ def create_results(count: int, start_time, end_time, wall_time) -> None:
             json.dump(results, output_results, ensure_ascii=True, indent=4)
             output_results.flush()
 
+    logging.info(f"COREX SCORE: {corex_score}")
     logging.info("Results output complete")
 
 def main() -> None:
     parser = argparse.ArgumentParser(description= "This script should be run once per physical core on the machine under test", 
                                  epilog="(C) HMx Labs Limited 2023. All Rights Reserved")
     parser.add_argument('--ore-dir', dest="ore_dir", type=str, required=True, help="Location of the ORE binary and libraries")
+    parser.add_argument('--sim-count', dest="sim_count", type=int, required=False, default=500, help="The number of simulations to run")
 
     try:
         args = parser.parse_args()
@@ -92,10 +119,11 @@ def main() -> None:
     
     try:
         ore_dir = args.ore_dir
+        sim_count = args.sim_count
         core_count = get_core_count()
         create_corex_unit_dirs(core_count)
         start_time = time.perf_counter()
-        procs = start_corex_unit(core_count, ore_dir)
+        procs = start_corex_unit(core_count, ore_dir, sim_count)
         success = wait_for_corex(procs)
         if not success:
             logging.error("Some corex-unit processes failed. Exiting")
@@ -103,7 +131,7 @@ def main() -> None:
 
         end_time = time.perf_counter()
         wall_time = end_time - start_time
-        create_results(core_count, start_time, end_time, wall_time)
+        create_results(core_count, sim_count, start_time, end_time, wall_time)
     except Exception:
         logging.exception("Failed executing corex")
         sys.exit(-1)

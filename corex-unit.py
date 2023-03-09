@@ -7,6 +7,7 @@ import sys
 import time
 import math
 import json
+import xml.etree.ElementTree as ElemTree
 
 LOG_FILE = "./corex-unit.log"
 ENC_INPUT_FILE = "./input.enc"
@@ -14,6 +15,8 @@ INPUT_TAR_FILE = "./input.tar.gz"
 OUTPUT_TAR_FILE = "./output.tar.gz"
 ENC_OUTPUT_FILE = "./output.enc"
 RESULTS_FILE = "./results.json"
+SIM_FILE = "./input/simulation.xml"
+CORE_CALC_COUNT = 163 * 83
 
 
 def set_env(ore_dir: str) -> None:
@@ -63,6 +66,16 @@ def unzip_input() -> None:
     run_shell_command(untar_command)
     logging.info("Input file archive expanded")
 
+def set_sim_count(sim_count: int) -> None:
+    input_xml = ElemTree.parse(SIM_FILE)
+    input_root = input_xml.getroot()
+    output_path_xml_element = input_root.find('./Parameters/Samples')
+    output_path_xml_element.text = str(sim_count)
+    
+    with open(SIM_FILE, 'wb') as out_file:
+        input_xml.write(out_file)
+        out_file.flush()
+
 
 def run_ore() -> float:
     # At this point we should have ore.xml and input directory in the current working directory
@@ -82,12 +95,31 @@ def process_output() -> None:
     run_shell_command(encrypt_command)
     logging.info("Created encrypted output")
 
+def create_results(sim_count: int, start_time: float, end_time: float, ore_time: float) -> None:
+    wall_time = end_time - start_time
+    prep_time = wall_time - ore_time
+    corex_score = (CORE_CALC_COUNT * sim_count) / wall_time / 100  # The 100 factor is just to get nicer numbers
+    results = { 
+                "score": corex_score,
+                "sim_count": sim_count,
+                "start_time": start_time,
+                "end_time": end_time,
+                "calc_time": ore_time,
+                "feed_time": prep_time,
+                "elapsed_time": wall_time
+              }
+    
+    with open(RESULTS_FILE, 'w', encoding="utf-8") as results_file:
+        json.dump(results, results_file, ensure_ascii=True, indent=4)
+        results_file.flush()
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description= "This script should be run once per physical core on the machine under test", 
-                                 epilog="(C) HMx Labs Limited 2023. All Rights Reserved")
+                                     epilog="(C) HMx Labs Limited 2023. All Rights Reserved")
     parser.add_argument('--input', dest="input", type=str, required=True, help='Filename of the inputs to use for ORE')
     parser.add_argument('--ore-dir', dest="ore_dir", type=str, required=True, help="Location of the ORE binary and libraries")
+    parser.add_argument('--sim-count', dest="sim_count", type=int, required=False, default=500, help="The number of simulations to run")
 
 
     try:
@@ -99,26 +131,17 @@ def main() -> None:
     try:
         input_file = args.input
         ore_dir = args.ore_dir
+        sim_count = args.sim_count
         set_env(ore_dir)
         start_time = time.perf_counter()
         copy_input(input_file)
         decrypt_input()
         unzip_input()
+        set_sim_count(sim_count)
         ore_time = run_ore()
         process_output()
         end_time = time.perf_counter()
-        wall_time = end_time - start_time
-
-        results = { 
-                    "start_time": start_time,
-                    "end_time": end_time,
-                    "ore_time": ore_time,
-                    "wall_time": wall_time
-                  }
-        
-        with open(RESULTS_FILE, 'w', encoding="utf-8") as results_file:
-            json.dump(results, results_file, ensure_ascii=True, indent=4)
-            results_file.flush()
+        create_results(sim_count, start_time, end_time, ore_time)
 
     except Exception:
         logging.exception("Failed executing corex-unit")
