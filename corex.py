@@ -55,7 +55,7 @@ def wait_for_corex(procs: list[subprocess.Popen]) -> bool:
     logging.info("All corex-unit processes complete")
     return success
 
-def create_results(count: int, sim_count: int, start_time: float, end_time: float, wall_time: float) -> None:
+def create_results(count: int, sim_count: int, wall_time: float) -> None:
     logging.info("Creating results")
     unit_results: list[dict[str,str]] = []
     unit_scores: list[float] = []
@@ -95,7 +95,8 @@ def create_results(count: int, sim_count: int, start_time: float, end_time: floa
         stdev_feed_time = statistics.stdev(unit_feed_times)
         stdev_wall_time = statistics.stdev(unit_wall_times)
 
-    results = {"sim_count": count,
+    results = {"core_count": count,
+               "sim_count": sim_count,
                "score": corex_score,
                "elapsed_time": wall_time,
                "mean_score": mean_score,
@@ -148,7 +149,7 @@ def main() -> None:
 
         end_time = time.perf_counter()
         wall_time = end_time - start_time
-        create_results(core_count, sim_count, start_time, end_time, wall_time)
+        create_results(core_count, sim_count, wall_time)
     except Exception:
         logging.exception("Failed executing corex")
         sys.exit(-1)
