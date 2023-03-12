@@ -74,27 +74,44 @@ def create_results(count: int, sim_count: int, start_time: float, end_time: floa
             unit_results.append(results)
     
     corex_score = sum(unit_scores)
-    total_core_time = sum(unit_wall_times)
-    mean_core_time =  total_core_time / count
-    max_core_time = max(unit_wall_times)
-    min_core_time = min(unit_wall_times)
-    var_core_time = max_core_time - min_core_time
-    stddev_core_time = 0
-    if count > 1:
-        stddev_core_time = statistics.stdev(unit_wall_times)
+    mean_score = corex_score / count
+    var_score = max(unit_scores) - min(unit_scores)
 
-    results = {
-                "score": corex_score,
-                "start_time": start_time,
-                "end_time": end_time,
-                "elapsed_time": wall_time,
-                "mean_core_time": mean_core_time,
-                "max_core_time": max_core_time,
-                "min_core_time": min_core_time,
-                "diff_core_time": var_core_time,
-                "stdev_core_time": stddev_core_time,
-                "unit_times": unit_results
-              }
+    mean_wall_time = sum(unit_wall_times) / count
+    mean_calc_time = sum(unit_calc_times) / count
+    mean_feed_time = sum(unit_feed_times) / count
+
+    var_wall_time = max(unit_wall_times) - min(unit_wall_times)
+    var_calc_time = max(unit_calc_times) - min(unit_calc_times)
+    var_feed_time = max(unit_feed_times) - min(unit_feed_times)
+
+    stdev_calc_time = 0
+    stdev_wall_time = 0
+    stdev_feed_time = 0
+    stdev_score = 0
+    if count > 1:
+        stdev_calc_time = statistics.stdev(unit_calc_times)
+        stdev_score = statistics.stdev(unit_scores)
+        stdev_feed_time = statistics.stdev(unit_feed_times)
+        stdev_wall_time = statistics.stdev(unit_wall_times)
+
+    results = {"sim_count": count,
+               "score": corex_score,
+               "elapsed_time": wall_time,
+               "mean_score": mean_score,
+               "var_score": var_score,
+               "stdev_score": stdev_score,
+               "mean_elapsed_time": mean_wall_time,
+               "mean_calc_time": mean_calc_time,
+               "mean_feed_time": mean_feed_time,
+               "var_elapsed_time": var_wall_time,
+               "var_calc_time": var_calc_time,
+               "var_feed_time": var_feed_time,
+               "stdev_elapsed_time": stdev_wall_time,
+               "stdev_calc_time": stdev_calc_time,
+               "stdev_feed_time": stdev_feed_time,
+               "unit_times": unit_results
+               }
     
     output_results_filename = os.path.join(".", RESULTS_FILE)
     with open(output_results_filename, 'w', encoding="utf-8") as output_results:
