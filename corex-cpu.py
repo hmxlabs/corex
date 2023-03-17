@@ -9,7 +9,7 @@ import math
 import json
 import xml.etree.ElementTree as ElemTree
 
-LOG_FILE = "./corex-unit.log"
+LOG_FILE = "./corex-cpu.log"
 ENC_INPUT_FILE = "./input.enc"
 INPUT_TAR_FILE = "./input.tar.gz"
 OUTPUT_TAR_FILE = "./output.tar.gz"
@@ -144,12 +144,12 @@ def main() -> None:
         create_results(sim_count, start_time, end_time, ore_time)
 
     except Exception:
-        logging.exception("Failed executing corex-unit")
+        logging.exception("Failed executing corex-cpu")
         sys.exit(-1)
 
 if __name__ == "__main__":
     logging.basicConfig(filename=LOG_FILE, filemode='a', level=logging.DEBUG,
                         format="%(asctime)s-%(levelname)-s-%(name)s::%(message)s")
-    logging.info("STARTING COREX-UNIT")
+    logging.info("STARTING COREX-CPU")
     main()
-    logging.info("ENDED COREX-UNIT")
+    logging.info("ENDED COREX-CPU")

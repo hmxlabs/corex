@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "corex-cpu",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--input", "../input.enc", "--ore-dir", "/home/hamza/Documents/HMxLabs/Software/corex/bin", "--sim-count", "10"],
+            "cwd": "${workspaceFolder}/temp"
+        },
+        {
+            "name": "corex",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--ore-dir", "/home/hamza/Documents/HMxLabs/Software/corex/bin", "--sim-count", "10", "--force-cpu", "2"],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
