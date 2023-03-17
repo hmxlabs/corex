@@ -43,7 +43,7 @@ COREx is a python script (well two scripts) and you will require Python3 install
     sudo apt install python3
 
 ## Running COREx
-Once the boost libraries and ORE are installed, either clone the COREx repository run the build script to create the appropriate input archive or download the binaries from the [Release](https://github.com/hmxlabs/corex/releases/download/1.0/corex.tar.gz) and extract them.
+Once the boost libraries and ORE are installed, either clone the COREx repository run the build script to create the appropriate input archive or download from the [release](https://github.com/hmxlabs/corex/releases/download/1.1/corex.tar.gz) and extract the archive.
 
 COREx can take 3 command line inputs of which only one is mandatory
 
