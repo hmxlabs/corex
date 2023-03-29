@@ -34,11 +34,9 @@ This benchmark uses [ORE Version 8](https://github.com/OpenSourceRisk/Engine/tre
 
 Windows binaries are available directly from the [ORE Release](https://github.com/OpenSourceRisk/Engine/releases/tag/v1.8.8.0). Linux (compiled on Ubuntu 22.04 LTS) are available from the HMx Labs website.
 
-ORE itself requires the [boost](https://www.boost.org) libraries which may be installed on an Ubuntu distribution as follows:
+ORE itself requires the [boost](https://www.boost.org) libraries. If you use the scripts in this repository to build ORE, it will package the boost libraries with the ORE binaries. Note this has only been tested on Ubuntu Server 22.04 LTS (x86_64 and arm64) versions. Alternatively you may follow the build instructions in the ORE documentation.
 
-    sudo apt install libboost-all-dev
-
-COREx is a python script (well two scripts) and you will require Python3 installed also. Again on an Ubuntu distribution this may be installed as follows:
+COREx is a python script (well two scripts) and you will require Python3 installed also. On an Ubuntu (and most Debian based) distribution this may be installed as follows:
 
     sudo apt install python3
 
