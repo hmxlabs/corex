@@ -3,6 +3,7 @@ output
 venv
 temp
 input.enc
-input.tar.gz
 .vscode
-corex.tar.gz
+corex-bin
+*.tar.gz
+boost
