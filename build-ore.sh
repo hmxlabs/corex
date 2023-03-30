@@ -2,6 +2,11 @@
 # More of list of steps to follow than a script... but it should work, assuming you have a clean checkout of this repository.
 
 set -x
+
+# Ensure that we don't pick up any other boost libraries
+export LD_LIBRARY_PATH=
+
+
 ROOT_DIR=`pwd`
 echo "Treating current directory as root dirctory for build: $ROOT_DIR"
 mkdir --parents boost/root
@@ -37,7 +42,7 @@ if [ $? -ne 0 ]; then
 fi
 
 
-cmake -DBOOST_ROOT=$ROOT_DIR/boost/root/include -DBOOST_LIBRARYDIR=$ROOT_DIR/boost/root/lib > cmake.log 2>&1
+cmake -DBOOST_ROOT=$ROOT_DIR/boost/root -DBOOST_LIBRARYDIR=$ROOT_DIR/boost/root/lib > cmake.log 2>&1
 if [ $? -ne 0 ]; then
     echo "Failed to configure cmake for build"
     exit 1
