@@ -95,7 +95,7 @@ def process_output() -> None:
     run_shell_command(encrypt_command)
     logging.info("Created encrypted output")
 
-def create_results(sim_count: int, start_time: float, end_time: float, ore_time: float) -> None:
+def create_results(sim_count: int, start_time: float, end_time: float, ore_time: float, output_dir: str) -> None:
     wall_time = end_time - start_time
     prep_time = wall_time - ore_time
     corex_score = (CORE_CALC_COUNT * sim_count) / wall_time / 100  # The 100 factor is just to get nicer numbers
@@ -108,8 +108,8 @@ def create_results(sim_count: int, start_time: float, end_time: float, ore_time:
                 "feed_time": prep_time,
                 "elapsed_time": wall_time
               }
-    
-    with open(RESULTS_FILE, 'w', encoding="utf-8") as results_file:
+    results_filename = os.path.join(output_dir, RESULTS_FILE)
+    with open(results_filename, 'w', encoding="utf-8") as results_file:
         json.dump(results, results_file, ensure_ascii=True, indent=4)
         results_file.flush()
 
@@ -120,6 +120,7 @@ def main() -> None:
     parser.add_argument('--input', dest="input", type=str, required=True, help='Filename of the inputs to use for ORE')
     parser.add_argument('--ore-dir', dest="ore_dir", type=str, required=True, help="Location of the ORE binary and libraries")
     parser.add_argument('--sim-count', dest="sim_count", type=int, required=False, default=500, help="The number of simulations to run")
+    parser.add_argument('--output-dir', dest="output_dir", type=str, required=False, default="./", help="The directory to write the results to. Defaults to the current directory")
 
 
     try:
@@ -129,6 +130,16 @@ def main() -> None:
         sys.exit(-1)
 
     try:
+        output_dir = args.output_dir
+        if not os.path.exists(output_dir):
+            print(f"Output directory {output_dir} does not exist")
+            sys.exit(1)
+
+        logfile = os.path.join(output_dir, LOG_FILE)
+        logging.basicConfig(filename=logfile, filemode='a', level=logging.DEBUG,
+                        format="%(asctime)s-%(levelname)-s-%(name)s::%(message)s")
+        logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+        logging.info("STARTING COREX-CPU")
         input_file = args.input
         ore_dir = args.ore_dir
         sim_count = args.sim_count
@@ -141,15 +152,11 @@ def main() -> None:
         ore_time = run_ore()
         process_output()
         end_time = time.perf_counter()
-        create_results(sim_count, start_time, end_time, ore_time)
-
+        create_results(sim_count, start_time, end_time, ore_time, output_dir)
+        logging.info("ENDED COREX-CPU")
     except Exception:
         logging.exception("Failed executing corex-cpu")
         sys.exit(-1)
 
 if __name__ == "__main__":
-    logging.basicConfig(filename=LOG_FILE, filemode='a', level=logging.DEBUG,
-                        format="%(asctime)s-%(levelname)-s-%(name)s::%(message)s")
-    logging.info("STARTING COREX-CPU")
     main()
-    logging.info("ENDED COREX-CPU")

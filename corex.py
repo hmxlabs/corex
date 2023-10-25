@@ -14,7 +14,7 @@ RESULTS_FILE = "results.json"
 def get_cpu_count() -> int:
     logging.info("Determining how many CPUs are on this machine")
     cpu_count=os.cpu_count()
-    if cpu_count > 256 or cpu_count < 1 :
+    if cpu_count > 1024 or cpu_count < 1 :
         logging.exception(f"Number of reported cpus on machine seems invalid: {cpu_count}")
         raise Exception("Unable to determine the number of cores on this machine")
 
@@ -22,21 +22,24 @@ def get_cpu_count() -> int:
     return cpu_count
 
 
-def create_corex_unit_dirs(cpu_count: int) -> None:
+def create_corex_unit_dirs(cpu_count: int, output:str) -> None:
     logging.info("Creating working directories for corex cpu  processes")
     for index in range(0,cpu_count):
         dir = os.path.join(".", str(index))
         Path(dir).mkdir(parents=False, exist_ok=True)
+        output_dir = os.path.join(output, str(index))
+        Path(output_dir).mkdir(parents=False, exist_ok=True)
     logging.info("Completed creating working directories")
 
 
-def start_corex_unit(cpu_count: int, ore_dir: str, sim_count: int) -> list[subprocess.Popen]:
+def start_corex_unit(cpu_count: int, ore_dir: str, output:str, sim_count: int) -> list[subprocess.Popen]:
     logging.info("Starting corex-cpu")
     procs=[]
     for index in range(0,cpu_count):
         logging.info(f"Starting process: {index}")
         cwd = os.path.join(".", str(index))
-        corex_unit_command = f"python3 ../corex-cpu.py --input ../input.enc --ore-dir {ore_dir} --sim-count {sim_count}"
+        output_dir = os.path.join(output, str(index))
+        corex_unit_command = f"python3 ../corex-cpu.py --input ../input.enc --ore-dir {ore_dir} --sim-count {sim_count} --output-dir {output_dir}"
         procs.append(subprocess.Popen([corex_unit_command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd))
 
     logging.info("All corex-cpu processes launched")
@@ -55,7 +58,7 @@ def wait_for_corex(procs: list[subprocess.Popen]) -> bool:
     logging.info("All corex-cpu processes complete")
     return success
 
-def create_results(cpu_count: int, sim_count: int, wall_time: float) -> None:
+def create_results(cpu_count: int, sim_count: int, wall_time: float, output_dir: str) -> None:
     logging.info("Creating results")
     cpu_results: list[dict[str,str]] = []
     cpu_scores: list[float] = []
@@ -64,7 +67,7 @@ def create_results(cpu_count: int, sim_count: int, wall_time: float) -> None:
     cpu_feed_times: list[float] = [] 
 
     for index in range(0,cpu_count):
-        result_filename = os.path.join(".", str(index), RESULTS_FILE)
+        result_filename = os.path.join(output_dir, str(index), RESULTS_FILE)
         with open(result_filename) as results_file:
             results = json.load(results_file)
             cpu_scores.append(results["score"])
@@ -128,6 +131,7 @@ def main() -> None:
     parser.add_argument('--ore-dir', dest="ore_dir", type=str, required=True, help="Location of the ORE binary and libraries")
     parser.add_argument('--sim-count', dest="sim_count", type=int, required=False, default=500, help="The number of simulations to run")
     parser.add_argument('--force-cpu', dest="cpu_count", type=int, required=False, default=0, help="Set this if you wish to override the detected number of CPUs")
+    parser.add_argument('--output-dir', dest="output_dir", type=str, required=False, default="./", help="The directory to output results to. Defaults to the current directory")
 
     try:
         args = parser.parse_args()
@@ -137,7 +141,20 @@ def main() -> None:
 
     
     try:
+        output_dir = args.output_dir
+        output_dir = os.path.abspath(output_dir)
+        if not os.path.exists(output_dir):
+            print(f"Output directory {output_dir} does not exist")
+            sys.exit(-1)
+        
+        logfile = os.path.join(output_dir, LOG_FILE)
+        logging.basicConfig(filename=logfile, filemode='a', level=logging.DEBUG,
+                        format="%(asctime)s-%(levelname)-s-%(name)s::%(message)s")
+        logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+        logging.info("STARTING COREX")
+        logging.info(f"Output directory: {output_dir}")
         ore_dir = args.ore_dir
+        ore_dir = os.path.abspath(ore_dir)
         sim_count = args.sim_count
         cpu_count = args.cpu_count
         if 0 == cpu_count:
@@ -145,9 +162,9 @@ def main() -> None:
         else:
             logging.info(f"Overriding CPU count to: {cpu_count}")
 
-        create_corex_unit_dirs(cpu_count)
+        create_corex_unit_dirs(cpu_count, output_dir)
         start_time = time.perf_counter()
-        procs = start_corex_unit(cpu_count, ore_dir, sim_count)
+        procs = start_corex_unit(cpu_count, ore_dir, output_dir, sim_count)
         success = wait_for_corex(procs)
         if not success:
             logging.error("Some corex-unit processes failed. Exiting")
@@ -155,16 +172,12 @@ def main() -> None:
 
         end_time = time.perf_counter()
         wall_time = end_time - start_time
-        create_results(cpu_count, sim_count, wall_time)
+        create_results(cpu_count, sim_count, wall_time, output_dir)
+        logging.info("ENDED COREX")
     except Exception:
         logging.exception("Failed executing corex")
         sys.exit(-1)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename=LOG_FILE, filemode='a', level=logging.DEBUG,
-                        format="%(asctime)s-%(levelname)-s-%(name)s::%(message)s")
-    logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
-    logging.info("STARTING COREX")
     main()
-    logging.info("ENDED COREX")
